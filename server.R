@@ -11,50 +11,34 @@ server <- function(input, output, session) {
   # We need to access the data from TabInterface (output$DTSuitability)
   access_DataSuitability <- function() {
     print("Suitability data accessed")
-
     DataSuitability <- reactive_DataSuitability()
-    save(DataSuitability, file = "DataSuitability.RData")
-    
     reactive_DataSuitability()
   }
 
   # We need to access the plot from TabInterface (output$barplot_suitability)
   access_plotSuitability <- function() {
     print("Suitability plot accessed")
-
     plotSuitability <- reactive_plotSuitability()
-    save(plotSuitability, file = "plotSuitability.RData")
-
     reactive_plotSuitability()
   }
 
   # We need to access the interface from global (orderdf)
   access_Interface <- function() {
     print("Interface accessed")
-
     interface <- reactive_Interface()
-    save(interface, file = "interface.RData")
-
     reactive_Interface()
   }
 
   # We need to access the additional info from TabInterface (output$DTinformations)
   access_AdditionalInfo <- function() {
     print("Additional informations accessed")
-
     additionalinfo <- reactive_AdditionalInfo()
-    save(additionalinfo, file = "additionalinfo.RData")
-
     reactive_AdditionalInfo()
   }
 
   access_inputs <- function() {
     print("Inputs accessed")
-    print(reactive_inputs())
-
     inputsdata <- reactive_inputs()
-    save(inputsdata, file = "inputsdata.RData")
-
     reactive_inputs()
   }
 
