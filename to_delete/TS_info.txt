@@ -16,7 +16,7 @@
 			
 ###################################	
 5.11.2024
-excel - smazat první řádek a hodit jej do poslendího - data posunutá nejsou - XXXhotovoXXX
+excel - smazat první řádek a hodit jej do poslendího - data posunutá nejsou - HOTOVO
 
 
 Vlevo (červeně):
@@ -30,4 +30,9 @@ Vpravo (zeleně) přidat:
 	
 	
 
-Dodělat stahování - zarovnat obrázky, přidat datum a parametry jak byly zaškrtnuty
+Dodělat stahování - zarovnat obrázky, přidat datum a parametry jak byly zaškrtnuty- HOTOVO
+
+
+
+###################################
+DATA - NIKDY NEDÁVAT "," - ROZHODÍ TO ŘADU FUNKCÍ!

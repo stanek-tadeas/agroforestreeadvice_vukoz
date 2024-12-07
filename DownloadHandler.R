@@ -216,9 +216,10 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
       selected_inputs_combined, 
       NULL,
       plotSuitability + theme(plot.margin = margin(t = 0, b = 0, r = -80, l = -80, unit = "pt")),
+      NULL,
       table_TreeScoring, 
       ncol = 1, 
-      rel_heights = c(0.07, 0.3, 0.2, 0.3, 1*graph_height, 1),  # Adjust heights to add space between elements
+      rel_heights = c(0.07, 0.3, 0.2, 0.3, 1*graph_height, 0.2 ,1),  # Adjust heights to add space between elements
       align = "h", 
       axis = "l"  
     )
@@ -252,6 +253,9 @@ create_dataINFO_plot <- function(datainfo = datainfo, language = "en") {
 
     datainfo <- replace(datainfo, datainfo == "NA", "")                                                 # replace "NA" with empty string
 
+    # sometimes datainfo has some empty "row names" - if NA, we will replace it by " "
+    rownames(datainfo) <- ifelse(is.na(rownames(datainfo)), " ", rownames(datainfo))
+
     # Customize the table theme to have smaller text
     table_theme <- ttheme_default(
       core = list(fg_params = list(cex = coreTextSize)),
@@ -270,7 +274,7 @@ create_dataINFO_plot <- function(datainfo = datainfo, language = "en") {
     combined <- plot_grid(
       headline, 
       NULL,
-      dataINFO_table + theme(plot.margin = margin(t = 0, b = 0, r = 80, l = 80, unit = "pt")),
+      dataINFO_table,
       ncol = 1, 
       align = "h",
       axis = "lt",
