@@ -213,9 +213,6 @@ default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weigh
   message("computing value for criteria ", criteria , " of type ", type, " based on iputs ", paste(inputs, collapse=","))
   #print("####### get inputs[criteria]")
   #print(inputs[criteria][1])
-
-  # We need access to used inputs - download handler needs to access them for table creation
-  reactive_inputs(inputs)
   
   if (type=="checkboxGroupInput"){ #for checkboxgroups, criteria is the title of the group
     #extract the relevant inputs to see which were chosen

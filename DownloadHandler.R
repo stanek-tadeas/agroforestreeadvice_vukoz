@@ -1,12 +1,24 @@
 
 # Function to get inputs selected by the user and return a translated data frame
 GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) {
+  df <- data.frame() # empty temp dataframe for conversion of list to dataframe
   tryCatch({
-    ID <- data.frame(name = names(ID), value = unname(ID))                          # convert named chr to data frame with two columns
+    # Convert the list to a dataframe - if the value is an atomic vector, create multiple rows
+    for (name in names(ID)) {
+      value <- ID[[name]]
+      if (is.atomic(value) && length(value) > 1) {
+        temp_df <- data.frame(name = name, value = value, stringsAsFactors = FALSE)
+      } else {
+        temp_df <- data.frame(name = name, value = as.character(value), stringsAsFactors = FALSE)
+      }
+      df <- rbind(df, temp_df)
+    }
+    ID <- df # we assign the converted dataframe back to ID
+
+    ID$objecttype <- IF$objecttype[match(ID$name, IF$criteria)]                            # convert named chr to data frame with two columns
     ID$name <- gsub("\\d$", "", ID$name)                                            # remove trailing digits from $name    - eg. height1 -> height         
     ID$objecttype <- IF$objecttype[match(ID$name, IF$criteria)]                     # add $objecttype to ID
     ID$side <- IF$side[match(ID$name, IF$criteria)]                                 # add $side to ID
-    ID <- ID[!duplicated(ID),]                                                      # sometimes the inputs are duplicated for some reason?
     
     # sometimes the side is not found - registered as "NA" - we will try to find it by IF$BigCriteria
     ID$side <- ifelse(is.na(ID$side), IF$side[match(ID$name, IF$BigCriteria)], ID$side)
@@ -39,7 +51,7 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
     # We want to simplify - when objecttype is "checkboxInput" - set value to "Selected"
     ID$value <- ifelse(ID$objecttype == "checkboxInput", "Selected", ID$value)
 
-    ID <- ID[!duplicated(ID),]                                                    # remove duplicates rows after we marged them
+    ID <- ID[!duplicated(ID),]                                                    # remove duplicates
     ID <- ID[order(ID$side, decreasing = TRUE),]                                  # order by side in descending order
     ID$objecttype <- NULL                                                         # remove $objecttype column         
     
