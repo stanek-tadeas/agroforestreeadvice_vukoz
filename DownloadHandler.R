@@ -213,10 +213,9 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
       selected_inputs_combined, 
       NULL,
       plotSuitability + theme(plot.margin = margin(t = 0, b = 0, r = -80, l = -80, unit = "pt")),
-      NULL,
       table_TreeScoring, 
       ncol = 1, 
-      rel_heights = c(0.07, 0.2, 0.2, 0.2, 1*graph_height, 0.1, 1, 1),  # Adjust heights to add space between elements
+      rel_heights = c(0.07, 0.3, 0.2, 0.3, 1*graph_height, 1),  # Adjust heights to add space between elements
       align = "h", 
       axis = "l"  
     )
@@ -268,16 +267,15 @@ create_dataINFO_plot <- function(datainfo = datainfo, language = "en") {
     combined <- plot_grid(
       headline, 
       NULL,
-      dataINFO_table, 
+      dataINFO_table + theme(plot.margin = margin(t = 0, b = 0, r = 80, l = 80, unit = "pt")),
       ncol = 1, 
       align = "h",
       axis = "lt",
-      rel_heights = c(0.05, 0, 1.2),
-      rel_widths = c(1, 1, 0.8) 
+      rel_heights = c(0.05, 0, 1.2)
     )
 
     # Add top, left and bottom margins
-    combined <- combined + theme(plot.margin = margin(t = 10, l = 120, r = 120, b = 0, unit = "pt"))
+    combined <- combined + theme(plot.margin = margin(t = 10, l = 50, r = 50, b = 0, unit = "pt"))
     return(combined)
  
   }, error = function(e) {
