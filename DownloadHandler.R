@@ -15,6 +15,9 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
     }
     ID <- df # we assign the converted dataframe back to ID
 
+    # we will drop false rows - as they were not selected
+    ID <- ID[ID$value != "FALSE",]
+
     ID$objecttype <- IF$objecttype[match(ID$name, IF$criteria)]                            # convert named chr to data frame with two columns
     ID$name <- gsub("\\d$", "", ID$name)                                            # remove trailing digits from $name    - eg. height1 -> height         
     ID$objecttype <- IF$objecttype[match(ID$name, IF$criteria)]                     # add $objecttype to ID
