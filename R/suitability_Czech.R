@@ -33,7 +33,7 @@ compute_suitability_Czech<-function(inputsdata=NULL,
                                     "height", "coppice", "habitus", "growthspeed", 
                                     "earlinessleafing", "floweringdate","subsidy",
                                     "climateclass", "altitude", "soil_fertility",
-                                    "soil_water", "light", "wood", "food",
+                                    "soil_water", "light", "wood", "food", "Undergrowth",
                                     "approval", "endengeredG", "endengeredU", "endengeredY")) #we intersect to cover the case when parameters are sent through url=> not all parameters might be present
   for(crit in standardformcriteria){
     #print(paste("compute score for", crit))
