@@ -93,14 +93,16 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
     ChosenInputs_rows <- nrow(ChosenInputs)
     graph_height <- 1  # Default height of the graph
 
-    if (ChosenInputs_rows > 22) {
+    if (ChosenInputs_rows > 18) {
       ChosenInputs_TextSize <- 0.6
-      graph_height <- 0.8
+      graph_height <- 0.5
       }
-    if (ChosenInputs_rows > 17) {
-      ChosenInputs_TextSize <- 0.8
+    if (ChosenInputs_rows > 14) {
+      ChosenInputs_TextSize <- 0.7
+      graph_height <- 0.8
     } else {
-      ChosenInputs_TextSize <- 1
+      ChosenInputs_TextSize <- 0.8
+      graph_height <- 0.9
     }
 
     # Split ChosenInputs into two tables based on the 'side' column
