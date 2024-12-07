@@ -94,14 +94,14 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
     graph_height <- 1  # Default height of the graph
 
     if (ChosenInputs_rows > 18) {
-      ChosenInputs_TextSize <- 0.6
+      ChosenInputs_TextSize <- 0.8
       graph_height <- 0.45
       }
     if (ChosenInputs_rows > 14) {
-      ChosenInputs_TextSize <- 0.7
+      ChosenInputs_TextSize <- 0.9
       graph_height <- 0.55
     } else {
-      ChosenInputs_TextSize <- 0.8
+      ChosenInputs_TextSize <- 1
       graph_height <- 0.75
     }
 
@@ -202,7 +202,7 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
       NULL,
       table_TreeScoring, 
       ncol = 1, 
-      rel_heights = c(0.07, 0.15, 0.2, 0.2, 1*graph_height, 0.1, 1, 1),  # Adjust heights to add space between elements
+      rel_heights = c(0.07, 0.2, 0.2, 0.2, 1*graph_height, 0.1, 1, 1),  # Adjust heights to add space between elements
       align = "h", 
       axis = "l"  
     )
@@ -263,7 +263,7 @@ create_dataINFO_plot <- function(datainfo = datainfo, language = "en") {
     )
 
     # Add top, left and bottom margins
-    combined <- combined + theme(plot.margin = margin(t = 10, l = 80, r = 80, b = 0, unit = "pt"))
+    combined <- combined + theme(plot.margin = margin(t = 10, l = 120, r = 120, b = 0, unit = "pt"))
     return(combined)
  
   }, error = function(e) {
