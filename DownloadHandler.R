@@ -6,6 +6,7 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
     ID$name <- gsub("\\d$", "", ID$name)                                            # remove trailing digits from $name    - eg. height1 -> height         
     ID$objecttype <- IF$objecttype[match(ID$name, IF$criteria)]                     # add $objecttype to ID
     ID$side <- IF$side[match(ID$name, IF$criteria)]                                 # add $side to ID
+    ID <- ID[!duplicated(ID),]                                                      # sometimes the inputs are duplicated for some reason?
     
     # sometimes the side is not found - registered as "NA" - we will try to find it by IF$BigCriteria
     ID$side <- ifelse(is.na(ID$side), IF$side[match(ID$name, IF$BigCriteria)], ID$side)
@@ -38,7 +39,7 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
     # We want to simplify - when objecttype is "checkboxInput" - set value to "Selected"
     ID$value <- ifelse(ID$objecttype == "checkboxInput", "Selected", ID$value)
 
-    ID <- ID[!duplicated(ID),]                                                    # remove duplicates
+    ID <- ID[!duplicated(ID),]                                                    # remove duplicates rows after we marged them
     ID <- ID[order(ID$side, decreasing = TRUE),]                                  # order by side in descending order
     ID$objecttype <- NULL                                                         # remove $objecttype column         
     
@@ -47,6 +48,7 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
     stop("#get_SelectedInputs# - Error processing selected inputs: ", e$message)
   })
 }
+
 DownloadHeadline_translate <- function(HeadlineToTranslate, language = "en") {
   # Translate the headline of the download page - takes data from translate_plot_categories
   # where type == "Download page headline" and tries to match inputted text to it
