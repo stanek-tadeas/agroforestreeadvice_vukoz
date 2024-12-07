@@ -282,7 +282,7 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
                                              orderby = orderby)
 
           # filter the trees based on the hard criteria
-          dfSuitability<-Hard_criteria_filter(dfSuitability, allinputs, interface)
+          dfSuitability<-Hard_criteria_filter(dfSuitability, inputsdata = controlData(), interface)
         
           #print(str(dfSuitability))
         } else{

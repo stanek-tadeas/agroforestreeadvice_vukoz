@@ -74,6 +74,9 @@ Hard_criteria_filter <- function(db, inputsdata, interface) {
   else {
     print("NO hard criteria (999) found in interface")
         return(db) }
+    
+  # We need to drop FALSE and "not selected" inputs
+  inputsdata <- inputsdata[inputsdata != "FALSE" & inputsdata != "not selected"]
   
   # Consolidate criteria from interface based on inputsdata and slider inputs
   used_criteria <<- rbind(interface[interface$criteria %in% names(inputsdata) &
