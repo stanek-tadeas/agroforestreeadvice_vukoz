@@ -159,6 +159,7 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
       #to do in the future: move the formatting to inside the suitability functions that need character vector, and allow suitability fnctions to accept lists as inputs
       reformattedinputs<-reactive({
         allinputs <- controlData()
+        reactive_inputs(allinputs)   # we need to get to the used inputs in downloadhandler
         reformated<-character()
         if(length(allinputs)>0) {
           #message("initial inputs:") ; message(str(allinputs)) 
