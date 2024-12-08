@@ -6,6 +6,9 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
     # Convert the list to a dataframe - if the value is an atomic vector, create multiple rows
     for (name in names(ID)) {
       value <- ID[[name]]
+      if (is.null(value)) {
+        next # Skip NULL values
+      } 
       if (is.atomic(value) && length(value) > 1) {
         temp_df <- data.frame(name = name, value = value, stringsAsFactors = FALSE)
       } else {
@@ -78,8 +81,7 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
     } else {
       colnames(ID) <- c("name", "side", "value")
     }
-    
-    
+  
     return(ID)
   }, error = function(e) {
     stop("#get_SelectedInputs# - Error processing selected inputs: ", e$message)
@@ -289,8 +291,8 @@ create_dataINFO_plot <- function(datainfo = datainfo, language = "en") {
     })
     TranslatedHeadline <- DownloadHeadline_translate("Additional informations about the trees by AgroForesTreeAdvice", language = language)
 
-    wrapCoef <- 0.5                                                                                  # When to wrap the text in the table cells
-    coreTextSize <- 0.85                                                                             # Font size for the table cells
+    wrapCoef <- 0.55                                                                                  # When to wrap the text in the table cells
+    coreTextSize <- 0.8                                                                             # Font size for the table cells
 
     # dynamically adjust the width of the columns based on the average length of the data
     datainfo <- as.data.frame(mapply(function(column, width) {
