@@ -56,7 +56,29 @@ GetSelectedInputs <- function(ID = inputsdata, IF = interface, lang = language) 
 
     ID <- ID[!duplicated(ID),]                                                    # remove duplicates
     ID <- ID[order(ID$side, decreasing = TRUE),]                                  # order by side in descending order
-    ID$objecttype <- NULL                                                         # remove $objecttype column         
+    ID$objecttype <- NULL                                                         # remove $objecttype column
+    print(ID)
+    # translate the column names
+    if (lang == "cz") {
+      colnames(ID) <- c("Vlastnost", "side", "Hodnota")
+    } else if (lang == "de") {
+      colnames(ID) <- c("Eigenschaft", "side", "Wert")
+    } else if (lang == "fr") {
+      colnames(ID) <- c("Caractéristique", "side", "Valeur")
+    } else if (lang == "es") {
+      colnames(ID) <- c("Característica", "side", "Valor")
+    } else if (lang == "it") {
+      colnames(ID) <- c("Caratteristica", "side", "Valore")
+    } else if (lang == "pl") {
+      colnames(ID) <- c("Cecha", "side", "Wartość")
+    } else if (lang == "pt") {
+      colnames(ID) <- c("Característica", "side", "Valor")
+    } else if (lang == "nl") {
+      colnames(ID) <- c("Kenmerk", "side", "Waarde")
+    } else {
+      colnames(ID) <- c("name", "side", "value")
+    }
+    
     
     return(ID)
   }, error = function(e) {
@@ -103,8 +125,8 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
 
   tryCatch({
     # Wrap text in the 'name' and 'value' columns
-    ChosenInputs$value <- sapply(ChosenInputs$value, function(x) paste(strwrap(x, width = 45), collapse = "\n"))
-    ChosenInputs$name <- sapply(ChosenInputs$name, function(x) paste(strwrap(x, width = 45), collapse = "\n"))
+    ChosenInputs[[3]] <- sapply(ChosenInputs[[3]], function(x) paste(strwrap(x, width = 45), collapse = "\n"))
+    ChosenInputs[[1]] <- sapply(ChosenInputs[[1]], function(x) paste(strwrap(x, width = 45), collapse = "\n"))
 
     # Count the number of rows in the ChosenInputs table - we will adjust size of text if too much rows
     ChosenInputs_rows <- nrow(ChosenInputs)
