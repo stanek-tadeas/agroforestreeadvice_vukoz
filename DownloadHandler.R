@@ -171,10 +171,19 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
     # Function to create table theme
     createTable <- function(SetLengthOutput = integer(20), text_size = integer(1)) {
       table_theme <- ttheme_default(
-      core = list(bg_params = list(fill = c(rep(c("white", "grey95"), length.out=SetLengthOutput)), col = NA),
-                  fg_params = list(cex = text_size)),
-      colhead = list(bg_params = list(fill = "grey80", col = NA)),
-      rowhead = list(bg_params = list(fill = "grey80", col = NA)))
+        core = list(
+          bg_params = list(fill = c(rep(c("white", "grey95"), length.out = SetLengthOutput)), col = "black"),
+          fg_params = list(cex = text_size, col = "black")
+        ),
+        colhead = list(
+          bg_params = list(fill = "white", col = "black"),
+          fg_params = list(col = "black")
+        ),
+        rowhead = list(
+          bg_params = list(fill = "white", col = "black"),
+          fg_params = list(col = "black")
+        )
+      )
       
       return(table_theme)
     }
@@ -201,9 +210,24 @@ CombinePlotsForDownload <- function(language = "en", interface = "", DataSuitabi
     })
 
     # Create the table with adjusted column widths and rotated column names
-    table_TreeScoring <- tableGrob(head(DataSuitability, 20), 
-                    theme = ttheme_default(colhead = list(fg_params = list(rot = 90, just = "right"))), 
-                    rows = NULL)
+    table_TreeScoring <- tableGrob(
+      head(DataSuitability, 20), 
+      theme = ttheme_default(
+        core = list(
+          fg_params = list(col = "black"),
+          bg_params = list(fill = "white", col = "black")
+        ),
+        colhead = list(
+          fg_params = list(rot = 90, just = "right", col = "black"),
+          bg_params = list(fill = "white", col = "black")
+        ),
+        rowhead = list(
+          fg_params = list(col = "black"),
+          bg_params = list(fill = "white", col = "black")
+        )
+      ), 
+      rows = NULL
+    )
     
     # Create a headline with a sublabel for the current date
     headline <- ggdraw() + 
