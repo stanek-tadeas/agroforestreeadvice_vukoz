@@ -252,15 +252,25 @@ create_dataINFO_plot <- function(datainfo = datainfo, language = "en") {
     }, datainfo, avg_length*wrapCoef, SIMPLIFY = FALSE))
 
     datainfo <- replace(datainfo, datainfo == "NA", "")                                                 # replace "NA" with empty string
+    colnames(datainfo) <- gsub("\\.", " ", colnames(datainfo))                                          # there are "." instead of " " in the colheads for some reason...
 
     # sometimes datainfo has some empty "row names" - if NA, we will replace it by " "
     rownames(datainfo) <- ifelse(is.na(rownames(datainfo)), " ", rownames(datainfo))
 
     # Customize the table theme to have smaller text
     table_theme <- ttheme_default(
-      core = list(fg_params = list(cex = coreTextSize)),
-      colhead = list(fg_params = list(cex = 1.2)),
-      rowhead = list(fg_params = list(cex = 1.2))
+      core = list(
+        fg_params = list(cex = coreTextSize),
+        bg_params = list(fill = "white", col = "black")
+      ),
+      colhead = list(
+        fg_params = list(cex = 1.2),
+        bg_params = list(fill = "white", col = "black")
+      ),
+      rowhead = list(
+        fg_params = list(cex = 1.2),
+        bg_params = list(fill = "white", col = "black")
+      )
     )
 
     dataINFO_table <- tableGrob(head(datainfo, 20), theme = table_theme, rows = NULL)
