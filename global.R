@@ -6,11 +6,11 @@ library(shiny)
 library(svglite)        # for svg download
 library(shinyjs)
 library(openxlsx)       # for writing xlsx files in download
-library(ggplot2) #for the barplot graph
+library(ggplot2)        # for the barplot graph
 #library(plotly)
-library(shinydashboard) #for Dashboard appearance
-library(DT) #for Data Table
-library(bslib) #for tooltip
+library(shinydashboard) # for Dashboard appearance
+library(DT)             # for Data Table
+library(bslib)          # for tooltip
 library(dplyr)
 library(stringr)
 #library(tidyverse)
@@ -19,12 +19,16 @@ library(shiny.i18n)     # for translations in the app
 library(cowplot)        # for ggplot2 plots in download
 library(gridExtra)
 library(rsvg)           # convert svg to pdf in downloads
+#library(reactlog)      # to display reactive graph
+library(leaflet)        # for the map
+library(sf)             # for the map
+library(maps)           # for the world map centroids
 ##global----
 
 #load("dataSTA.Rdata")
 #load("dataFlanders.Rdata")
 #load("dataDeciduous.Rdata")
-#load("dataSCSM.Rdata")
+#load("dataSCSM.Rdata") 
 # dataDENTRO<-read.xlsx("models/DENTRO.xlsx", sheet="data")
 # interfaceDENTRO<-read.xlsx("models/DENTRO.xlsx", sheet="interface")
 # dataSTA<-read.xlsx("models/STA.xlsx", sheet="data")
