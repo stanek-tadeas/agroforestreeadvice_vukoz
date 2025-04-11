@@ -1,0 +1,34 @@
+Common.name	Species.name	High.temperatures	Unseasonal.frosts	Wind.exposure	Drought.risk	Seasonal.waterlogging	North.facing	Upland	Main.products	Livestock.fodder	Max.size.of.shadow	Leaf.emergence.time	Avoid.suckering.roots	Fast.growth	Coppice	Pollard	Nutrient.OM.accumulation	Nitrogen.fixation	Minimise.acidification	Carbon.sequestration	Native.status	Wildlife.value	Low.disease.risk	Low.pest.risk	Low.vertebrate.pest.damage	Climate.resilience
+Field Maple	Acer campestre	1	1	1	0.67	0.16	1	0	Wood products;Biomass	0.5	Moderate	Early (Apr to Nov)	1	0.75	1	0	0	0	0.5	130	1	2.333333333	1	0.5	0.5	1
+Sycamore	Acer pseudoplatanus	0.33	1	0.5	0.33	0.16	1	1	Wood products;Biomass	0.5	High	Late (May to Nov)	1	0.75	1	1	0.5	0	0.5	442	0.2	3.444444444	0.5	0.5	0	0.5
+Italian Alder	Alnus cordata	0.67	1	1	0.83	0.67	1	0	Wood products;Biomass	0.67	Low	Late (May to Nov)	1	1	1	0	0	1	0	442	0.2	NaN	0.5	1	1	1
+Common Alder	Alnus glutinosa	0.67	1	0.5	0.16	1	1	0.5	Wood products;Biomass	0.67	Moderate	Early (Apr to Nov)	1	0.75	1	1	0	1	0	442	1	2.555555556	0.5	1	0.75	0.5
+Red Alder	Alnus rubra	0	0	1	0.83	NaN	0	0	Wood products	NaN	Low	Early (Apr to Nov)	1	1	1	0	0	1	0	442	0.2	NaN	1	1	1	1
+Paper-bark Birch	Betula papyrifera	0	1	1	0	0	1	0	Wood products;Speciality products	NaN	Moderate	Early (Apr to Nov)	1	1	0.5	0.5	0	0	NaN	313	0	NaN	0.5	1	0.75	1
+Silver Birch	Betula pendula	0	1	1	0	0	1	0.5	Wood products;Speciality products	0.5	Moderate	Early (Apr to Nov)	1	1	0.5	0	0	0	NaN	381	1	3.777777778	0	1	0.75	0.5
+Downy Birch	Betula pubescens	0	1	1	0	0.67	1	1	Wood products;Biomass;Speciality products	0.5	Low	Early (Apr to Nov)	1	0.75	0.5	0	0	0	NaN	313	1	3.777777778	0	1	0.75	0
+Hornbeam	Carpinus betulus	1	1	1	0.67	0	1	0	Wood products;Biomass	0.33	High	Early (Apr to Nov)	1	0.25	1	1	0.25	0	0	134	1	2.111111111	0.5	1	0.25	1
+Sweet Chestnut	Castanea sativa	1	0	0.5	0.83	0	1	0.5	Food products;Wood products;Biomass;Speciality products	NaN	High	Late (May to Nov)	1	0.75	1	0	1	0	0.5	134	0.6	2.111111111	0.25	1	0.75	0.75
+Hazel	Corylus avellana	0.67	1	1	0.33	0	0	0	Food products;Wood products;Biomass	0.33	Low	Early (Apr to Nov)	0	0.5	1	0	0	0	NaN	130	1	2.888888889	1	1	0.5	0.5
+Cider Gum	Eucalyptus gunnii	0	0	0	0.33	0.5	1	0	Wood products;Biomass;Speciality products	NaN	High	Evergreen	1	1	1	1	0.5	0	0.5	442	0	NaN	1	1	0.75	0.5
+Beech	Fagus sylvatica	0	0	0.5	0.33	0	1	1	Wood products;Biomass;Speciality products	0.5	High	Early (Apr to Nov)	1	0.5	0.5	1	0.5	0	0	134	1	3.444444444	0.5	0.5	0	0.25
+Black Walnut	Juglans nigra	1	0	0	0.33	0	0	0	Food products;Wood products;Speciality products	0.83	Moderate	Late (May to Nov)	1	0.5	1	1	1	0	1	270	0.2	2.25	0.5	0.5	0	1
+Walnut	Juglans regia	1	0	0	0.33	0	1	0	Food products;Wood products;Speciality products	0.83	High	Late (May to Nov)	1	0.5	0	1	1	0	1	270	0.6	2.25	0.5	1	0.5	1
+Apple	Malus domestica / cultivars	1	0	0	0.33	0	0	0	Food products	1	Low	Early (Apr to Nov)	1	0.5	0	0	0.5	0	NaN	130	0.6	3.333333333	0.25	0	0.5	0.5
+Scots Pine	Pinus sylvestris	1	1	1	1	0.5	1	1	Wood products;Speciality products	0.67	Moderate	Evergreen	1	0	0	0	0	0	0	195	0.8	3	0	0.5	0.25	0.5
+Black-poplar	Populus nigra ssp. betulifolia	0.83	1	1	0.16	0.83	1	0	Wood products;Biomass	0.67	High	Early (Apr to Nov)	0	1	1	1	1	0	0.75	442	1	2.444444444	0.5	0.5	0	0.5
+Hybrid poplars (timber)	Populus spp.	1	0	0.5	0	0	1	0	Wood products;Biomass	0.67	High	Early (Apr to Nov)	0	1	0	0	1	0	0.75	442	0	2.444444444	0	0	0	0.75
+Aspen	Populus tremula	0	1	1	0.33	0.67	1	1	Wood products;Biomass	0.67	Moderate	Late (May to Nov)	0	1	1	0	0.5	0	0.75	442	1	2.444444444	0.25	0.5	0	0.75
+Wild Cherry	Prunus avium	0.33	0	0.5	0.33	0	1	0	Food products;Wood products	0	Moderate	Early (Apr to Nov)	0	0.75	0	0	0.5	0	1	442	1	2.777777778	0	0.5	0.5	0.5
+Plum	Prunus domestica ssp. domestica	1	1	0	1	0	0	0	Food products	0.67	Low	Early (Apr to Nov)	0	0.5	0	0	0	0	0	130	0.6	3	0	0	1	0.5
+Bird Cherry	Prunus padus	1	1	0.5	0.33	0.67	1	0.5	Food products	0	Low	Early (Apr to Nov)	0	0.75	1	1	0	0	1	130	1	2.777777778	0.5	0.5	0.75	0
+Pear	Pyrus communis	1	1	0	0.5	0	0	0	Food products	0.67	Low	Early (Apr to Nov)	1	0.25	0	0	0.5	0	NaN	130	0.6	3.222222222	0	0	0.5	0.5
+Sessile Oak	Quercus petraea	1	0.5	1	0.67	0	1	1	Wood products;Biomass;Speciality products	0.67	High	Late (May to Nov)	1	0.25	1	1	1	0	0	270	1	4.333333333	0	0.5	0	0.25
+Pedunculate Oak	Quercus robur	0.67	0.5	1	0.16	0.5	1	0	Wood products;Biomass;Speciality products	0.67	High	Late (May to Nov)	1	0	1	1	1	0	0	270	1	4.333333333	0	0.5	0	0.25
+Red Oak	Quercus rubra	1	0.5	1	0.67	0	0	0	Wood products;Biomass	0.33	Moderate	Late (May to Nov)	1	0.75	1	0	1	0	0	109	0.2	NaN	0.5	0.75	0	1
+White Willow	Salix alba	0.67	1	1	0	1	1	0	Wood products;Biomass;Speciality products	0.83	High	Early (Apr to Nov)	0	1	1	1	0.25	0	0.75	313	0.6	3	0	0	0.25	0.5
+Goat Willow	Salix caprea	0.67	1	1	0.33	0.33	1	1	Biomass;Speciality products	0.83	Low	Early (Apr to Nov)	1	0.75	1	0	0	0	0.75	130	1	3.333333	0	0	0.25	0.75
+Grey Willow	Salix cinerea	0.67	1	1	0	1	0	1	Biomass	0.83	Low	Early (Apr to Nov)	1	1	1	0	0	0	0.75	130	1	3.333333	0	0	0.25	0.5
+Willow varieties (SRC)	Salix spp.	1	1	0.5	0	0.33	1	1	Biomass	0.83	Low	Early (Apr to Nov)	1	1	1	0	0	0	0.75	442	0.2	3	0	0	0.25	0.5
+Rowan	Sorbus aucuparia	0.33	1	1	0.33	0	1	1	Food products	0.83	Low	Early (Apr to Nov)	1	0.5	1	0	0	0	1	130	1	2.555555556	0.5	0.25	0	0
+Small-leaved Lime	Tilia cordata	0.67	1	0	0.33	0	1	0	Wood products	1	High	Late (May to Nov)	1	0.75	1	1	1	0	1	381	1	2.777777778	1	0.5	0	1
