@@ -19,7 +19,7 @@ library(shiny.i18n)     # for translations in the app
 library(cowplot)        # for ggplot2 plots in download
 library(gridExtra)
 library(rsvg)           # convert svg to pdf in downloads
-#library(reactlog)      # to display reactive graph
+library(reactlog)      # to display reactive graph
 library(leaflet)        # for the map
 library(sf)             # for the map
 library(maps)           # for the world map centroids
@@ -91,6 +91,17 @@ interfaceSUOMI[1:length(interfaceSUOMI)]<-lapply(interfaceSUOMI[1:length(interfa
 interfaceUKguide<-interfaceUKguide[!is.na(interfaceUKguide$side),]
 interfaceUKguide[1:length(interfaceUKguide)]<-lapply(interfaceUKguide[1:length(interfaceUKguide)], function(x) gsub(pattern=",", replacement=".", x=x))
 
+AllowDebug <- TRUE # set to FALSE to disable debugging messages
+
+Debugging <- function(...) {
+  message(paste0("\n", "[DEBUG] ", paste(..., collapse = " "), "\n"))
+}
+
+# test debugging
+if (AllowDebug) {
+  Debugging("Debugging is active.")
+}
+
 toto<-strsplit(c(names(interfaceSTA), 
                  names(interfaceDENTRO), 
                  names(interfaceDECIDUOUS), 
@@ -112,6 +123,7 @@ reshapecontrols<-function(controls, language, compactconditions=FALSE, compactob
   if(!language %in% languages) {print(paste(language, "is not in the languages available for this interface, so defaulting to english"))
     language<-"en"
   }
+  if (AllowDebug) {Debugging(paste("Language selected:", language))}
   #we select the desired language
   toto<-controls[!is.na(controls$criteria)& !is.na(controls$objecttype),c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", paste(c("BigCriteria", "criteria", "choice"),language, sep="_"))]
   names(toto)<-c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", "labelBigCriteria", "labelcriteria", "labelchoice")
@@ -150,6 +162,10 @@ reshapecontrols<-function(controls, language, compactconditions=FALSE, compactob
   }
   compact<-compact[order(compact$side, compact$order),]
   #print(head(compact))
+  if (AllowDebug) {
+    Debugging("Reshaped controls dimensions:")
+    Debugging(dim(compact))
+  }
   return(compact)
 }
 
@@ -189,6 +205,9 @@ orderdf<-function(df, orderby, idvariable, interface){
   # Update reactive interface - so other functions know which interface was used (eg. download handler)
   reactive_Interface(interface)
 
+  if (AllowDebug) {
+    Debugging("Ordered dataframe:", str(df))
+    }
   return(df)
 }
 

@@ -162,7 +162,9 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
         reactive_inputs(allinputs)   # we need to get to the used inputs in downloadhandler
         reformated<-character()
         if(length(allinputs)>0) {
-          message("initial inputs:") ; print((allinputs)) 
+          if (AllowDebug) {
+            Debugging(paste0("### allinputs:"), str(allinputs))
+          }
           # List of things (chr for selectInput, 
           #                 chr for radioButtons
           #                 chr vector for checkboxGroupInput,
