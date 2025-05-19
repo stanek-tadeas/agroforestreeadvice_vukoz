@@ -231,18 +231,6 @@ server <- function(input, output, session) {
         }
       )
       
-      showModal(modalDialog(
-        title = "Download txt file",
-        htmlOutput("dataPreview"),  # Display data preview
-        footer = tagList(
-          modalButton("Cancel"),
-          downloadButton("modalDownload", "Download")
-        ),
-        size = "l",
-        easyClose = TRUE
-      ))
-      
-      
     }
     
   }) #end managing URL queries
