@@ -154,13 +154,13 @@ body <- dashboardBody(
               
               tabPanel(i18n$t("SCSM (species climate suitability model)"), value="SCSM", moduleTabInterface_UI(id = "SCSM", data=dataSCSM, interface=interfaceSCSM)), 
               
-              tabPanel("Juiste Boom op de Juiste Plek", value="JBOJP", moduleTabInterface_UI(id = "JBOJP", data = dataJBOJP, interface= interfaceJBOJP)),
+              tabPanel(i18n$t("Juiste Boom op de Juiste Plek"), value="JBOJP", moduleTabInterface_UI(id = "JBOJP", data = dataJBOJP, interface= interfaceJBOJP)),
               
-              tabPanel("GoÖko (German Hedgerow manager)", value="DEHM", moduleTabInterface_UI(id = "DEHM", data = dataDEHM, interface= interfaceDEHM)),
+              tabPanel(i18n$t("GoÖko (German Hedgerow manager)"), value="DEHM", moduleTabInterface_UI(id = "DEHM", data = dataDEHM, interface= interfaceDEHM)),
               
-              tabPanel("Finnish tree suitability", value="SUOMI", moduleTabInterface_UI(id = "SUOMI", data = dataSUOMI, interface= interfaceSUOMI)),
+              tabPanel(i18n$t("Finnish tree suitability"), value="SUOMI", moduleTabInterface_UI(id = "SUOMI", data = dataSUOMI, interface= interfaceSUOMI)),
               
-              tabPanel("UK Guide", value="UKguide", moduleTabInterface_UI(id = "UKguide", data = dataUKguide, interface= interfaceUKguide))
+              tabPanel(i18n$t("UK Guide"), value="UKguide", moduleTabInterface_UI(id = "UKguide", data = dataUKguide, interface= interfaceUKguide))
               
             )
     ),#fin tool
