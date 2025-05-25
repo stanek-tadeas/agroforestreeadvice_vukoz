@@ -8,6 +8,7 @@ for agroforestry systems the tool can be used here:
 ## Contributors to code:
 
 -   Marie Gosme
+-   Tadeáš Staněk
 -   Raphael Paut
 -   Clément Rigal
 -   Birk Skyum
@@ -45,6 +46,18 @@ for agroforestry systems the tool can be used here:
 -   Jan Weger (VUKOZ Průhonice)
 -   Lubos Úradníček (MENDELU Brno)
 -   Antonín Martiník (MENDELU Brno)
+
+-   **GoÖko:**
+-   Tsonkova, P.
+-   C. Böhm
+-   R. Hübner
+-   J. Ehritt
+
+-   **UK agroforestry Tree guide:**
+-   Tom Staton (University of Reading)
+-   Kate Beauchamp (Forest Research)
+-   Alice Broome (Forest Research)
+-   Tom Breeze (University of Reading)
 
 ## Funding :
 This work was initiated through DigitAF (Grant Agreement N° 101059794), a project co-funded by the European Commission, European Research Agency, within the Horizon Europe programme, Cluster 6: “Food, bioeconomy, natural resources, agriculture and environment”. 

@@ -11,6 +11,11 @@ library(ggplot2) #for the barplot graph
 library(shinydashboard) #for Dashboard appearance
 library(DT) #for Data Table
 library(bslib) #for tooltip
+#library(reactlog) #to display reactive graph
+library(leaflet)#for the map
+library(sf) #for the map
+library(maps) #for the world map centroids
+#options(shiny.reactlog = TRUE)
 library(dplyr)
 library(stringr)
 #library(tidyverse)
@@ -53,6 +58,8 @@ dataDEHM<-read.table("models/dataDEHM.txt", fileEncoding = "UTF-8", encoding = "
 interfaceDEHM<-read.table("models/interfaceDEHM.txt", fileEncoding = "UTF-8", encoding = "UTF-8",quote="", fill=TRUE, sep="\t", header=TRUE)
 dataSUOMI<-read.table("models/dataSUOMI.txt", fileEncoding = "UTF-8", encoding = "UTF-8", fill=TRUE, sep="\t", skipNul =TRUE, header=TRUE)
 interfaceSUOMI<-read.table("models/interfaceSUOMI.txt", fileEncoding = "UTF-8", encoding = "UTF-8",quote="", fill=TRUE, sep="\t", header=TRUE)
+dataUKguide<-read.table("models/dataUKguide.txt", fileEncoding = "UTF-8", encoding = "UTF-8", fill=TRUE, sep="\t", skipNul =TRUE, header=TRUE, na.strings="NaN")
+interfaceUKguide<-read.table("models/interfaceUKguide.txt", fileEncoding = "UTF-8", encoding = "UTF-8",quote="", fill=TRUE, sep="\t", header=TRUE)
 
 # In czech, there are empty spaces around words in some cells 
 dataCzech <- data.frame(lapply(dataCzech, function(x) {if (is.character(x)) {return(trimws(x))} else {return(x)}}))
@@ -82,6 +89,8 @@ interfaceDEHM<-interfaceDEHM[!is.na(interfaceDEHM$side),]
 interfaceDEHM[1:length(interfaceDEHM)]<-lapply(interfaceDEHM[1:length(interfaceDEHM)], function(x) gsub(pattern=",", replacement=".", x=x))
 interfaceSUOMI<-interfaceSUOMI[!is.na(interfaceSUOMI$side),]
 interfaceSUOMI[1:length(interfaceSUOMI)]<-lapply(interfaceSUOMI[1:length(interfaceSUOMI)], function(x) gsub(pattern=",", replacement=".", x=x))
+interfaceUKguide<-interfaceUKguide[!is.na(interfaceUKguide$side),]
+interfaceUKguide[1:length(interfaceUKguide)]<-lapply(interfaceUKguide[1:length(interfaceUKguide)], function(x) gsub(pattern=",", replacement=".", x=x))
 
 toto<-strsplit(c(names(interfaceSTA), 
                  names(interfaceDENTRO), 
@@ -191,6 +200,7 @@ orderdf<-function(df, orderby, idvariable, interface){
 #' |-----------|---------|-------|
 #' |1 item from a drop-down list (or in radio buttons)|Yes/no columns for each possible item|1 if the tree has this feature, 0 otherwise|
 #' |1 item from a drop-down list (or in radio buttons)|1 column containing an item|1 if the tree has this feature, 0 otherwise|
+#' |1 item from a checkbox|1 column containing a value|the value if the checkbox is checked, 0 otherwise|
 #' |1 or more items in a set of checkboxes|Yes/no columns for each possible item|(number of items present in tree features, among selected items)/(number of selected items)|
 #' |1 or more items in a set of checkboxes|1 column containing one or more items, or several columns each containing 1 item|(number of items present in tree features, among selected items)/(number of selected items)|
 #' |1 or more items in a set of checkboxes|several columns (with names corresponding to items) containing scores|sum of scores of chosen columns|
@@ -209,7 +219,7 @@ orderdf<-function(df, orderby, idvariable, interface){
 #' @export
 #'
 #' @examples
-default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weight = as.integer(1), yesindicator=c("yes", "oui", "x", "X", "T", "TRUE", "VRAI")){
+default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weight = as.integer(1), yesindicator=c("yes", "oui", "x", "X", "T", "TRUE", "VRAI", "1")){
   message("computing value for criteria ", criteria , " of type ", type, " based on iputs ", paste(inputs, collapse=","))
   #print("####### get inputs[criteria]")
   #print(inputs[criteria][1])
@@ -247,7 +257,8 @@ default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weigh
       } else {
         print(paste("could not guess which variable to use for", chosen)) ; db$value<-NA
       }}
-   } else if (type=="selectInput") {
+   } else 
+     if (type=="selectInput") {
     
     chosen<-inputs[criteria]
     if(substr(chosen[1],start=1, stop=4) == "not ") # if the user selected "not " in the selectInput, then we select all species
@@ -262,12 +273,16 @@ default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weigh
       if (sum(grepl(pattern=make.names(chosen), x=names(db), fixed=TRUE))==1) { #the chosen is among the column names
         db$value<-as.numeric(db[,grepl(pattern=chosen, x=names(db))]) 
       } else {
-        print(paste("could not guess which variable to use for", chosen)) ; db$value<-NA
+        print(paste(chosen, "potentially corresponds to severalcolumns:", paste(names(db)[grepl(pattern=make.names(chosen), x=names(db), fixed=TRUE)], collapse=","))) ; db$value<-NA
       }}
     
-  } else if (type=="checkboxInput") {
-    db$value<- as.numeric(db[,criteria] %in% yesindicator)
-  } else if (type=="sliderInput") {
+  } else 
+    if (type=="checkboxInput") {
+      if(class(db[,criteria])=="numeric") { #the database already contains scores
+        db$value<- db[,criteria]
+      } else db$value<- as.numeric(db[,criteria] %in% yesindicator)
+  } else 
+    if (type=="sliderInput") {
     chosen<-as.numeric(inputs[gsub(pattern="[0-9]+", replacement="", x=names(inputs))==criteria])
     
     #chosen<-as.numeric(inputs[grepl(pattern=criteria, x=names(inputs))])
@@ -305,7 +320,8 @@ default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weigh
     #chosen<-as.numeric(chosen[!duplicated(names(chosen))])
     
     
-  } else if (type=="numericInput") {
+  } else 
+    if (type=="numericInput") {
     chosen<-inputs[criteria]
     if(any(grepl(pattern=")-(", fixed=TRUE, x=db[,criteria]))) { #db gives a range of values
       splits<-strsplit(db[,criteria], split=")-(", fixed=TRUE)
@@ -340,6 +356,115 @@ default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weigh
   return(db)
 }
 
+
+# read data for databases page ---
+toolsdata<-read.table("models/allModels.txt", fileEncoding = "UTF-8", encoding = "UTF-8",quote="", fill=TRUE, sep="\t", header=TRUE)
+#"project"         "countries"       "Info"            "reference"       "link_reference"  "Link_standalone"
+#countries are comma-delimited, warning about the spelling: it must be the spelling used by the "world" map of maps package
+# # Sample data.table with projects and countries
+# sample_data <- data.frame(
+#   project = c('Czech', 'DECIDUOUS', 'GoÖko', 'DENTRO', 'JBOJP', 'SCSM', 'STA', 'SUOMI', 'UK Guide'),
+#   countries = c('Czech Republic', 'France', 'Germany', 'Belgium', 'Netherlands', 'Netherlands',
+#                 'Cameroon, China, Colombia, Ghana, Laos, Nicaragua, Tanzania, Uganda, Vietnam', 
+#                 'Finland', 'UK'
+#   )
+# )
+
+
+# Function to get country centroid coordinates
+get_country_coords <- function() {
+  # Get world map data
+  world_map <- map("world", exact = FALSE, plot = FALSE, fill = TRUE)
+  world_map<-st_as_sf(world_map)
+  world_centroids <- st_make_valid(st_transform(world_map, crs=4326))
+  world_centroids$longitude<-sf::st_coordinates(sf::st_centroid(world_centroids))[,1]
+  world_centroids$latitude<-sf::st_coordinates(sf::st_centroid(world_centroids))[,2]
+  world_centroids<-as.data.frame(world_centroids)[,c("ID", "longitude", "latitude")]
+  return(world_centroids)
+}
+
+# Create project colors and icon indices
+# Create a list of different colored icons
+combinaisons<-expand.grid(markerColor=c("red", "darkred", "orange", "beige", "green", "darkgreen", "lightgreen", "blue", "darkblue", "lightblue", "purple", "pink", "cadetblue", "white", "gray", "black"),
+                          icon=c("flag", "star", "check", "circle", "certificate", "tag", "bookmark", "globe", "map-marker"))
+iconespossibles<-mapply(makeAwesomeIcon, as.character(combinaisons$icon), rep("fa", nrow(combinaisons)), as.character(combinaisons$markerColor),MoreArgs =list( iconColor = "white"),SIMPLIFY =FALSE)
+
+
+# Function to prepare data for mapping
+prepare_map_data <- function(data, country_coords=country_coords) {
+  country_coords <- get_country_coords()
+  
+  # Split the comma-separated countries and create a row for each country-project pair
+  projects <- data$project
+  countries_list <- strsplit(data$countries, ",\\s*")
+  
+  # Create a data frame with one row per country-project pair
+  map_data <- data.frame(
+    project = rep(projects, sapply(countries_list, length)),
+    country = unlist(countries_list)
+  )
+  toto<-setdiff(map_data$country, country_coords$ID)
+  if(length(toto)>0) warning("Warning: the following countries are not spelled as in the 'world' map in package maps: ", paste(toto, collapse=", "))
+  # Merge with country coordinates
+  map_data <- merge(map_data, country_coords, 
+                    by.x = "country", by.y = "ID", 
+                    all.x = TRUE)
+  
+  # Calculate slight offsets for countries with multiple projects to prevent exact overlap
+  # Group by country, count projects
+  country_counts <- aggregate(map_data[, "country", drop=FALSE], by = map_data[, "country", drop=FALSE], "length")
+  names(country_counts)[2]<-"N"
+  map_data <- merge(map_data, country_counts, by = "country")
+  
+  # Assign an index to each project within a country
+  map_data<-map_data[order(map_data$country),]
+  map_data$project_index<-1
+  for(i in 2:nrow(map_data)) if(map_data$country[i]==map_data$country[i-1]) map_data$project_index[i]<-map_data$project_index[i-1]+1
+  
+  
+  # Create offsets based on the index and total number of projects
+  map_data$offset_lon <- ifelse(map_data$N > 1, 
+                                (map_data$project_index - (map_data$N + 1) / 2) * 2, 
+                                0)
+  map_data$offset_lat <- ifelse(map_data$N > 1, 
+                                (map_data$project_index - (map_data$N + 1) / 2) * 2, 
+                                0)
+  
+  
+  # Apply offsets to coordinates
+  map_data$longitude <- map_data$longitude + map_data$offset_lon / 111  # Roughly 111 km per degree
+  map_data$latitude <- map_data$latitude + map_data$offset_lat / 111
+  
+  
+   colors<-unname(sapply(iconespossibles,"[[", "markerColor"))
+  # project_icons <- list(
+  #   makeAwesomeIcon(icon = "flag", markerColor = "red", iconColor = "white", library = "fa"),
+  #   makeAwesomeIcon(icon = "star", markerColor = "darkblue", iconColor = "white", library = "fa"),
+  #   makeAwesomeIcon(icon = "check", markerColor = "green", iconColor = "white", library = "fa"),
+  #   makeAwesomeIcon(icon = "circle", markerColor = "purple", iconColor = "white", library = "fa"),
+  #   makeAwesomeIcon(icon = "certificate", markerColor = "orange", iconColor = "white", library = "fa"),
+  #   makeAwesomeIcon(icon = "tag", markerColor = "yellow", iconColor = "black", library = "fa"),
+  #   makeAwesomeIcon(icon = "bookmark", markerColor = "darkred", iconColor = "white", library = "fa"),
+  #   makeAwesomeIcon(icon = "globe", markerColor = "darkgreen", iconColor = "white", library = "fa"),
+  #   makeAwesomeIcon(icon = "map-marker", markerColor = "cadetblue", iconColor = "white", library = "fa")
+  # )
+  # Assign each project an icon index
+  projects <- unique(map_data$project)
+  project_attrs <- data.frame(
+    project = projects,
+    color = colors[1:length(projects)],
+    icon_index = 1:length(projects)
+  )
+  #put back the other project information
+  project_attrs<-merge(project_attrs, data[,c("project", "countries", "Info", "reference", "link_reference",   "Link_standalone")])
+
+  map_data <- merge(map_data, project_attrs, by = "project")
+  
+  return(map_data)
+}
+
+
+
 # if you need to further reformat the data, you can do it within the suitability_MODELNAME.txt file
 source("R/suitability_DENTRO.R")
 source("R/suitability_DECIDUOUS.R")
@@ -349,8 +474,7 @@ source("R/suitability_Czech.R")
 source("R/suitability_JBOJP.R")
 source("R/suitability_DEHM.R")
 source("R/suitability_SUOMI.R") 
-
-
+source("R/suitability_UKguide.R")
 
 
 
