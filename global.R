@@ -374,7 +374,7 @@ toolsdata<-read.table("models/allModels.txt", fileEncoding = "UTF-8", encoding =
 # Function to get country centroid coordinates
 get_country_coords <- function() {
   # Get world map data
-  world_map <- map("world", exact = FALSE, plot = FALSE, fill = TRUE)
+  world_map <- maps::map("world", exact = FALSE, plot = FALSE, fill = TRUE)
   world_map<-st_as_sf(world_map)
   world_centroids <- st_make_valid(st_transform(world_map, crs=4326))
   world_centroids$longitude<-sf::st_coordinates(sf::st_centroid(world_centroids))[,1]
