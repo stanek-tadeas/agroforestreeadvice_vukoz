@@ -1,4 +1,3 @@
-
 # Fichier de définition de l'interface utilisateur pour l'application Shiny
 
 # header ----
@@ -174,9 +173,13 @@ body <- dashboardBody(
            # h1("Czech AgroforesTree Selection Tool:"),
             #p("Data and other know-how for this tree selection tool in conditions of the Czech Republic were provided from publication (certified methodology) Practices and components of agroforestry systems recommended for the restoration and strengthening of environmental functions of landscape which was main result of the research project EPSILON TH04030409 of TACR (2019-2022). The input database was updated and adapted for use in the on-line tool AgroforetsTreeAdvice by following authors: Jan Weger, Luboš Úradníček, Antonín Martiník, Tadeáš Staněk and Marie Gosme."),
             #a("Link for the pdf explaining the methodology", href="https://www.vukoz.cz/wp-content/uploads/2023/03/Metodika-ALS-Epsilon-fin-3.pdf"),
-            checkboxGroupInput("project_select", "Select Tools:", 
-                               choices = toolsdata$project),
-                               #selected = toolsdata$project),
+            # Make the checkboxGroupInput scrollable and visually compact
+            div(
+              style = "max-height: 120px; overflow-y: auto; border: 1px solid #ccc; padding: 4px; background: #fafafa; margin-bottom: 10px;",
+              checkboxGroupInput("project_select", "Select Tools:", 
+                                 choices = toolsdata$project,
+                                 selected = toolsdata$project)
+            ),
             leafletOutput("map", height = "800px"),
             card(
               full_screen = TRUE,
