@@ -6,11 +6,16 @@ library(shiny)
 library(svglite)        # for svg download
 library(shinyjs)
 library(openxlsx)       # for writing xlsx files in download
-library(ggplot2)        # for the barplot graph
+library(ggplot2) #for the barplot graph
 #library(plotly)
-library(shinydashboard) # for Dashboard appearance
-library(DT)             # for Data Table
-library(bslib)          # for tooltip
+library(shinydashboard) #for Dashboard appearance
+library(DT) #for Data Table
+library(bslib) #for tooltip
+#library(reactlog) #to display reactive graph
+library(leaflet)#for the map
+library(sf) #for the map
+library(maps) #for the world map centroids
+#options(shiny.reactlog = TRUE)
 library(dplyr)
 library(stringr)
 #library(tidyverse)
@@ -19,16 +24,12 @@ library(shiny.i18n)     # for translations in the app
 library(cowplot)        # for ggplot2 plots in download
 library(gridExtra)
 library(rsvg)           # convert svg to pdf in downloads
-library(reactlog)      # to display reactive graph
-library(leaflet)        # for the map
-library(sf)             # for the map
-library(maps)           # for the world map centroids
 ##global----
 
 #load("dataSTA.Rdata")
 #load("dataFlanders.Rdata")
 #load("dataDeciduous.Rdata")
-#load("dataSCSM.Rdata") 
+#load("dataSCSM.Rdata")
 # dataDENTRO<-read.xlsx("models/DENTRO.xlsx", sheet="data")
 # interfaceDENTRO<-read.xlsx("models/DENTRO.xlsx", sheet="interface")
 # dataSTA<-read.xlsx("models/STA.xlsx", sheet="data")
@@ -91,17 +92,6 @@ interfaceSUOMI[1:length(interfaceSUOMI)]<-lapply(interfaceSUOMI[1:length(interfa
 interfaceUKguide<-interfaceUKguide[!is.na(interfaceUKguide$side),]
 interfaceUKguide[1:length(interfaceUKguide)]<-lapply(interfaceUKguide[1:length(interfaceUKguide)], function(x) gsub(pattern=",", replacement=".", x=x))
 
-AllowDebug <- TRUE # set to FALSE to disable debugging messages
-
-Debugging <- function(...) {
-  message(paste0("\n", "[DEBUG] ", paste(..., collapse = " "), "\n"))
-}
-
-# test debugging
-if (AllowDebug) {
-  Debugging("Debugging is active.")
-}
-
 toto<-strsplit(c(names(interfaceSTA), 
                  names(interfaceDENTRO), 
                  names(interfaceDECIDUOUS), 
@@ -123,7 +113,6 @@ reshapecontrols<-function(controls, language, compactconditions=FALSE, compactob
   if(!language %in% languages) {print(paste(language, "is not in the languages available for this interface, so defaulting to english"))
     language<-"en"
   }
-  if (AllowDebug) {Debugging(paste("Language selected:", language))}
   #we select the desired language
   toto<-controls[!is.na(controls$criteria)& !is.na(controls$objecttype),c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", paste(c("BigCriteria", "criteria", "choice"),language, sep="_"))]
   names(toto)<-c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", "labelBigCriteria", "labelcriteria", "labelchoice")
@@ -162,10 +151,6 @@ reshapecontrols<-function(controls, language, compactconditions=FALSE, compactob
   }
   compact<-compact[order(compact$side, compact$order),]
   #print(head(compact))
-  if (AllowDebug) {
-    Debugging("Reshaped controls dimensions:")
-    Debugging(dim(compact))
-  }
   return(compact)
 }
 
@@ -205,9 +190,6 @@ orderdf<-function(df, orderby, idvariable, interface){
   # Update reactive interface - so other functions know which interface was used (eg. download handler)
   reactive_Interface(interface)
 
-  if (AllowDebug) {
-    Debugging("Ordered dataframe:", str(df))
-    }
   return(df)
 }
 
@@ -237,7 +219,7 @@ orderdf<-function(df, orderby, idvariable, interface){
 #' @export
 #'
 #' @examples
-default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weight = as.integer(1), yesindicator=c("yes", "oui", "x", "X", "T", "TRUE", "VRAI")){
+default_computecrit<-function(criteria,type,inputs, db, BigCriteria, side, weight = as.integer(1), yesindicator=c("yes", "oui", "x", "X", "T", "TRUE", "VRAI", "1")){
   message("computing value for criteria ", criteria , " of type ", type, " based on iputs ", paste(inputs, collapse=","))
   #print("####### get inputs[criteria]")
   #print(inputs[criteria][1])
@@ -392,7 +374,7 @@ toolsdata<-read.table("models/allModels.txt", fileEncoding = "UTF-8", encoding =
 # Function to get country centroid coordinates
 get_country_coords <- function() {
   # Get world map data
-  world_map <- map("world", exact = FALSE, plot = FALSE, fill = TRUE)
+  world_map <- maps::map("world", exact = FALSE, plot = FALSE, fill = TRUE)
   world_map<-st_as_sf(world_map)
   world_centroids <- st_make_valid(st_transform(world_map, crs=4326))
   world_centroids$longitude<-sf::st_coordinates(sf::st_centroid(world_centroids))[,1]

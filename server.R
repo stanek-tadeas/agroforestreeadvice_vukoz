@@ -230,17 +230,14 @@ server <- function(input, output, session) {
           writeLines(txt_content, file)
         }
       )
+
+      
       
     }
     
   }) #end managing URL queries
   
   
-  
-  # Reactive expression for the selected language
-  language <- reactive({
-    input$in_language
-  })
   
   
   # For the database page ----
@@ -256,87 +253,148 @@ server <- function(input, output, session) {
     return(data)
   })
   
-  # Create the map
+  # Create the map with colored countries (non-interactive, fit to world)
   output$map <- renderLeaflet({
-    # data <- map_data()
-    # 
-    # # Create a legend with project information
-    # projects <- unique(data[, c("project", "color")])
-    # 
-    leaflet() %>%
-      addTiles() %>%
-      setView(lng = 0, lat = 20, zoom = 2)
-  })
-  
-  # Update map markers when selection changes
-  observe({
     data <- map_data()
-    # Add markers with different icons based on project
-    leafletProxy("map") %>%
-      clearMarkers()
-    # Add markers one project at a time so we can use a different icon for each project
-    for (proj in unique(data$project)) {
-      proj_data <- data[data$project == proj,]
-      icon_index <- proj_data$icon_index[1]
-      leafletProxy("map") %>%
-        addAwesomeMarkers(
-          data = proj_data,
-          lng = ~longitude, 
-          lat = ~latitude,
-          popup = ~paste("<strong>Tool:</strong>", project, "<br>",
-                         "<strong>Description:</strong>", Info),
-          label = ~project,
-          icon = iconespossibles[[icon_index]],
-          group = proj
-        )
-    }
-  })
-  
-  # Add a legend to the map
-  observe({
-    data <- map_data()
-    projects <- unique(data[, c("project", "color")])
-    
-    # Create HTML for the legend
-    legend_html <- "<div style='padding: 6px; background-color: white; border-radius: 4px; border: 1px solid #ccc;'>"
-    legend_html <- paste0(legend_html, "<div style='font-weight: bold; margin-bottom: 5px;'>Projects</div>")
-    
-    # Add each project to the legend
-    for (i in 1:nrow(projects)) {
-      proj <- projects$project[i]
-      color <- projects$color[i]
-      
-      # Create a colored circle to represent the project
+    world <- maps::map("world", fill = TRUE, plot = FALSE)
+    world_sf <- sf::st_as_sf(world)
+    country_colors <- setNames(data$color, data$country)
+    world_sf$fillColor <- country_colors[as.character(world_sf$ID)]
+    world_sf$fillColor[is.na(world_sf$fillColor)] <- "#CCCCCC"
+
+    # Prepare country-to-project legend (same as in observer)
+    legend_data <- unique(data[, c("country", "color", "project")])
+    legend_data <- legend_data[order(legend_data$country), ]
+    legend_html <- "<div style='padding: 8px; background-color: white; border-radius: 4px; border: 1px solid #ccc; max-height: 350px; overflow-y: auto;'>"
+    legend_html <- paste0(legend_html, "<div style='font-weight: bold; margin-bottom: 5px;'>Country &rarr; Tool(s)</div>")
+    for (country in unique(legend_data$country)) {
+      color <- legend_data$color[legend_data$country == country][1]
+      projects <- paste(legend_data$project[legend_data$country == country], collapse = ", ")
       legend_html <- paste0(
-        legend_html, 
-        "<div style='margin: 3px 0;'><span style='background-color: ", 
-        color, 
-        "; width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 6px;'></span>",
-        proj,
+        legend_html,
+        "<div style='margin: 3px 0;'><span style='background-color: ",
+        color,
+        "; width: 14px; height: 14px; border-radius: 3px; display: inline-block; margin-right: 6px; border: 1px solid #888;'></span>",
+        "<b>", country, "</b>: ", projects,
         "</div>"
       )
     }
-    
     legend_html <- paste0(legend_html, "</div>")
-    
-    # Add the legend to the map
-    leafletProxy("map") %>%
-      clearControls() %>%
+
+    leaflet(world_sf, options = leafletOptions(
+      zoomControl = FALSE, dragging = TRUE, doubleClickZoom = FALSE,
+      scrollWheelZoom = FALSE, boxZoom = FALSE, keyboard = FALSE,
+      minZoom = 2, maxZoom = 4
+    )) %>%
+      addTiles() %>%
+      addPolygons(
+        fillColor = ~fillColor,
+        fillOpacity = 0.6,
+        color = "#444444",
+        weight = 1,
+        popup = NULL,
+        highlightOptions = NULL
+      ) %>%
+      setView(lng = 10, lat = 45, zoom = 3) %>%
+      setMaxBounds(lng1 = -30, lat1 = 20, lng2 = 60, lat2 = 40) %>%
       addControl(
         html = legend_html,
         position = "bottomright"
       )
+})
+
+  # Update map polygons and add a custom legend when selection changes (keep non-interactive)
+  observe({
+    data <- map_data()
+    world <- maps::map("world", fill = TRUE, plot = FALSE)
+    world_sf <- sf::st_as_sf(world)
+    country_colors <- setNames(data$color, data$country)
+    world_sf$fillColor <- country_colors[as.character(world_sf$ID)]
+    world_sf$fillColor[is.na(world_sf$fillColor)] <- "#CCCCCC"
+
+    # Prepare country-to-project legend
+    legend_data <- unique(data[, c("country", "color", "project")])
+    legend_data <- legend_data[order(legend_data$country), ]
+    legend_html <- "<div style='padding: 8px; background-color: white; border-radius: 4px; border: 1px solid #ccc; max-height: 350px; overflow-y: auto;'>"
+    legend_html <- paste0(legend_html, "<div style='font-weight: bold; margin-bottom: 5px;'>Country &rarr; Tool(s)</div>")
+    for (country in unique(legend_data$country)) {
+      color <- legend_data$color[legend_data$country == country][1]
+      projects <- paste(legend_data$project[legend_data$country == country], collapse = ", ")
+      legend_html <- paste0(
+        legend_html,
+        "<div style='margin: 3px 0;'><span style='background-color: ",
+        color,
+        "; width: 14px; height: 14px; border-radius: 3px; display: inline-block; margin-right: 6px; border: 1px solid #888;'></span>",
+        "<b>", country, "</b>: ", projects,
+        "</div>"
+      )
+    }
+    legend_html <- paste0(legend_html, "</div>")
+
+    leafletProxy("map", data = world_sf) %>%
+      clearShapes() %>%
+      addPolygons(
+        fillColor = ~fillColor,
+        fillOpacity = 0.6,
+        color = "#444444",
+        weight = 1,
+        popup = NULL,
+        highlightOptions = NULL
+      ) %>%
+      clearControls() %>%
+      addControl(
+        html = legend_html,
+        position = "bottomright"
+      ) %>%
+      setMaxBounds(lng1 = -180, lat1 = -60, lng2 = 180, lat2 = 85)
   })
-  
-  
+
   # Show project table
   output$DTToolComparison <- renderDT({
     selected_data <- toolsdata[toolsdata$project %in% input$project_select,]
-    pasmanq<-selected_data$link_reference !=""
-    selected_data$link_reference[pasmanq] <- paste0("<a href='",selected_data$link_reference[pasmanq],"' target='_blank'>",selected_data$link_reference[pasmanq],"</a>")
-    pasmanq<-selected_data$Link_standalone !=""
-    selected_data$Link_standalone[pasmanq] <- paste0("<a href='",selected_data$Link_standalone[pasmanq],"' target='_blank'>",selected_data$Link_standalone[pasmanq],"</a>")
-    selected_data
+    pasmanq <- selected_data$link_reference != ""
+    selected_data$link_reference[pasmanq] <- paste0("<a href='", selected_data$link_reference[pasmanq], "' target='_blank'>", selected_data$link_reference[pasmanq], "</a>")
+    pasmanq <- selected_data$Link_standalone != ""
+    selected_data$Link_standalone[pasmanq] <- paste0("<a href='", selected_data$Link_standalone[pasmanq], "' target='_blank'>", selected_data$Link_standalone[pasmanq], "</a>")
+    
+    # Get color for each project from map_data
+    mapdata <- map_data()
+    project_colors <- unique(mapdata[, c("project", "color")])
+    color_vec <- setNames(project_colors$color, project_colors$project)
+    color_col <- color_vec[selected_data$project]
+    color_col[is.na(color_col)] <- "#FFFFFF"
+    
+    # Add a new column as the first column for color
+    selected_data$.__ <- color_col
+    selected_data <- selected_data[, c(ncol(selected_data), 1:(ncol(selected_data)-1))]
+    
+    datatable(
+      selected_data,
+      escape = FALSE,
+      rownames = FALSE,
+      options = list(
+        dom = 't',
+        paging = FALSE,
+        columnDefs = list(
+          list(width = '10px', targets = 0), # narrow color column
+          list(orderable = FALSE, targets = 0)
+        )
+      ),
+      selection = 'none',
+      callback = JS(
+        "table.on('draw', function(){",
+        "  table.columns(0).nodes().flatten().to$().each(function(i, el){",
+        "    var color = $(el).text();",
+        "    $(el).css({'background-color': color, 'color': color, 'padding': 0, 'width':'20px'});",
+        "    $(el).text('');",
+        "  });",
+        "});"
+      )
+    ) %>%
+      formatStyle(
+        columns = 1,
+        backgroundColor = styleEqual(color_col, color_col)
+      )
   })
   
   
