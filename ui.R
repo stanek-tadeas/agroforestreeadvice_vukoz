@@ -180,11 +180,14 @@ body <- dashboardBody(
                                  choices = toolsdata$project,
                                  selected = toolsdata$project)
             ),
-            leafletOutput("map", height = "800px"),
+            leafletOutput("map", height = "600px"),
             card(
               full_screen = TRUE,
               card_header("Tool Information"),
-              DTOutput(outputId ="DTToolComparison")
+              div(
+                style = "height: 600px; overflow-y: auto;",
+                DTOutput(outputId ="DTToolComparison")
+              )
             )
             
             

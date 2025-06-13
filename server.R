@@ -262,27 +262,30 @@ server <- function(input, output, session) {
     world_sf$fillColor <- country_colors[as.character(world_sf$ID)]
     world_sf$fillColor[is.na(world_sf$fillColor)] <- "#CCCCCC"
 
-    # Prepare country-to-project legend (same as in observer)
+    # Combine countries by tool (project) for the legend
     legend_data <- unique(data[, c("country", "color", "project")])
-    legend_data <- legend_data[order(legend_data$country), ]
+    legend_data <- legend_data[order(legend_data$project, legend_data$country), ]
+    # For each project, get all countries
+    legend_by_project <- aggregate(country ~ project + color, legend_data, function(x) paste(sort(x), collapse = ", "))
     legend_html <- "<div style='padding: 8px; background-color: white; border-radius: 4px; border: 1px solid #ccc; max-height: 350px; overflow-y: auto;'>"
-    legend_html <- paste0(legend_html, "<div style='font-weight: bold; margin-bottom: 5px;'>Country &rarr; Tool(s)</div>")
-    for (country in unique(legend_data$country)) {
-      color <- legend_data$color[legend_data$country == country][1]
-      projects <- paste(legend_data$project[legend_data$country == country], collapse = ", ")
+    legend_html <- paste0(legend_html, "<div style='font-weight: bold; margin-bottom: 5px;'>Tool &rarr; Country(ies)</div>")
+    for (i in seq_len(nrow(legend_by_project))) {
+      color <- legend_by_project$color[i]
+      project <- legend_by_project$project[i]
+      countries <- legend_by_project$country[i]
       legend_html <- paste0(
         legend_html,
         "<div style='margin: 3px 0;'><span style='background-color: ",
         color,
         "; width: 14px; height: 14px; border-radius: 3px; display: inline-block; margin-right: 6px; border: 1px solid #888;'></span>",
-        "<b>", country, "</b>: ", projects,
+        "<b>", project, "</b>: ", countries,
         "</div>"
       )
     }
     legend_html <- paste0(legend_html, "</div>")
 
     leaflet(world_sf, options = leafletOptions(
-      zoomControl = FALSE, dragging = TRUE, doubleClickZoom = FALSE,
+      zoomControl = TRUE, dragging = TRUE, doubleClickZoom = TRUE,
       scrollWheelZoom = FALSE, boxZoom = FALSE, keyboard = FALSE,
       minZoom = 2, maxZoom = 4
     )) %>%
@@ -295,8 +298,6 @@ server <- function(input, output, session) {
         popup = NULL,
         highlightOptions = NULL
       ) %>%
-      setView(lng = 10, lat = 45, zoom = 3) %>%
-      setMaxBounds(lng1 = -30, lat1 = 20, lng2 = 60, lat2 = 40) %>%
       addControl(
         html = legend_html,
         position = "bottomright"
@@ -312,20 +313,22 @@ server <- function(input, output, session) {
     world_sf$fillColor <- country_colors[as.character(world_sf$ID)]
     world_sf$fillColor[is.na(world_sf$fillColor)] <- "#CCCCCC"
 
-    # Prepare country-to-project legend
+    # Combine countries by tool (project) for the legend
     legend_data <- unique(data[, c("country", "color", "project")])
-    legend_data <- legend_data[order(legend_data$country), ]
+    legend_data <- legend_data[order(legend_data$project, legend_data$country), ]
+    legend_by_project <- aggregate(country ~ project + color, legend_data, function(x) paste(sort(x), collapse = ", "))
     legend_html <- "<div style='padding: 8px; background-color: white; border-radius: 4px; border: 1px solid #ccc; max-height: 350px; overflow-y: auto;'>"
-    legend_html <- paste0(legend_html, "<div style='font-weight: bold; margin-bottom: 5px;'>Country &rarr; Tool(s)</div>")
-    for (country in unique(legend_data$country)) {
-      color <- legend_data$color[legend_data$country == country][1]
-      projects <- paste(legend_data$project[legend_data$country == country], collapse = ", ")
+    legend_html <- paste0(legend_html, "<div style='font-weight: bold; margin-bottom: 5px;'>Tool &rarr; Country(ies)</div>")
+    for (i in seq_len(nrow(legend_by_project))) {
+      color <- legend_by_project$color[i]
+      project <- legend_by_project$project[i]
+      countries <- legend_by_project$country[i]
       legend_html <- paste0(
         legend_html,
         "<div style='margin: 3px 0;'><span style='background-color: ",
         color,
         "; width: 14px; height: 14px; border-radius: 3px; display: inline-block; margin-right: 6px; border: 1px solid #888;'></span>",
-        "<b>", country, "</b>: ", projects,
+        "<b>", project, "</b>: ", countries,
         "</div>"
       )
     }
@@ -345,18 +348,25 @@ server <- function(input, output, session) {
       addControl(
         html = legend_html,
         position = "bottomright"
-      ) %>%
-      setMaxBounds(lng1 = -180, lat1 = -60, lng2 = 180, lat2 = 85)
+      )
   })
 
   # Show project table
   output$DTToolComparison <- renderDT({
     selected_data <- toolsdata[toolsdata$project %in% input$project_select,]
-    pasmanq <- selected_data$link_reference != ""
-    selected_data$link_reference[pasmanq] <- paste0("<a href='", selected_data$link_reference[pasmanq], "' target='_blank'>", selected_data$link_reference[pasmanq], "</a>")
-    pasmanq <- selected_data$Link_standalone != ""
-    selected_data$Link_standalone[pasmanq] <- paste0("<a href='", selected_data$Link_standalone[pasmanq], "' target='_blank'>", selected_data$Link_standalone[pasmanq], "</a>")
-    
+
+    # Replace link_reference and Link_standalone with clickable icons if present
+    icon_link <- function(url) {
+      if (!is.na(url) && url != "") {
+        # Use fa-link icon (FontAwesome 4, more widely available)
+        return(paste0("<a href='", url, "' target='_blank'><i class='fa fa-link'></i></a>"))
+      } else {
+        return("")
+      }
+    }
+    selected_data$link_reference <- vapply(selected_data$link_reference, icon_link, character(1))
+    selected_data$Link_standalone <- vapply(selected_data$Link_standalone, icon_link, character(1))
+
     # Get color for each project from map_data
     mapdata <- map_data()
     project_colors <- unique(mapdata[, c("project", "color")])
