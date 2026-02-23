@@ -89,8 +89,15 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
           actionButton(inputId = ns("show_modal"), 
             label = i18n$t("Download"), icon = icon("download"), 
             style = "font-weight: bold; background-color: #337ab7; color: white; border: none; padding: 5px 10px;"),
-              
-              
+          # Feedback button — replace the href value with your actual Google Form URL
+          tags$a(
+            href = "https://docs.google.com/forms/d/e/1FAIpQLScw42ejAPOhb3ItW_TBl0cKi-3fHqDIDalYzVyJGwIWsa143w/viewform",
+            target = "_blank",
+            rel = "noopener noreferrer",
+            class = "btn",
+            style = "font-weight: bold; background-color: #337ab7; color: white; border: none; padding: 5px 10px;",
+            icon("comment"), " ", i18n$t("Feedback")
+          ),
               
               ) # end div
             )), 
