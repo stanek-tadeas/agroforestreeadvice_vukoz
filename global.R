@@ -114,8 +114,16 @@ reshapecontrols<-function(controls, language, compactconditions=FALSE, compactob
     language<-"en"
   }
   #we select the desired language
-  toto<-controls[!is.na(controls$criteria)& !is.na(controls$objecttype),c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", paste(c("BigCriteria", "criteria", "choice"),language, sep="_"))]
-  names(toto)<-c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", "labelBigCriteria", "labelcriteria", "labelchoice")
+  tooltip_col <- paste0("tooltip_", language)
+  has_tooltip <- tooltip_col %in% names(controls)
+  if (has_tooltip) {
+    toto<-controls[!is.na(controls$criteria)& !is.na(controls$objecttype),c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", paste(c("BigCriteria", "criteria", "choice"),language, sep="_"), tooltip_col)]
+    names(toto)<-c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", "labelBigCriteria", "labelcriteria", "labelchoice", "labeltooltip")
+  } else {
+    toto<-controls[!is.na(controls$criteria)& !is.na(controls$objecttype),c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", paste(c("BigCriteria", "criteria", "choice"),language, sep="_"))]
+    names(toto)<-c("side", "order", "BigCriteria", "criteria", "choice", "objecttype", "labelBigCriteria", "labelcriteria", "labelchoice")
+    toto$labeltooltip <- ""
+  }
   #we first reshape the choices (in the case of multichoices controls: selectInput, checkBoxGroupInput)
   
   compact<-data.frame()
@@ -145,6 +153,7 @@ reshapecontrols<-function(controls, language, compactconditions=FALSE, compactob
       bigeffects$choice<-""
       bigeffects$labelchoice<-""
       bigeffects$objecttype<-"checkboxInput"
+      bigeffects$labeltooltip<-""
     } 
     #message(paste(c(names(compact), names(bigeffects)), collapse=" "))
     compact<-rbind(compact[compact$side=="responsetrait",],bigeffects)

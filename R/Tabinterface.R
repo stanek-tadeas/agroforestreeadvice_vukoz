@@ -336,6 +336,18 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
           names(choices)<-labchoices
           #print(choices)
           labelinput<-initcompactcontrols$labelcriteria[i]
+          tooltip_text <- {
+            txt <- if ("labeltooltip" %in% names(initcompactcontrols)) initcompactcontrols$labeltooltip[i] else ""
+            if (!is.na(txt) && nzchar(trimws(txt))) txt else ""
+          }
+          if (nzchar(tooltip_text)) {
+            labelinput <- tagList(
+              labelinput,
+              tags$sup(title = tooltip_text,
+                       style = "cursor: help; color: #337ab7; margin-left: 3px;",
+                       icon("circle-question", style = "font-size: 1em;"))
+            )
+          }
           
           control <- switch(
             control_type,
@@ -347,10 +359,6 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
             radioButtons=radioButtons(input_id, label = labelinput,choices = choices)
             # Add more control types as needed
           )
-          # tooltip(
-          #   control,
-          #   "ça marche le tooltip!!" #actually it does not work: tooltip does not get triggered... need to better understand where to add the function.
-          # )
           
           column(width = 6, control)
         })
@@ -374,7 +382,18 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
           labchoices<-strsplit(initcompactcontrols$labelchoice[i], ",")[[1]]
           names(choices)<-labchoices
           labelinput<-initcompactcontrols$labelcriteria[i]
-          
+          tooltip_text <- {
+            txt <- if ("labeltooltip" %in% names(initcompactcontrols)) initcompactcontrols$labeltooltip[i] else ""
+            if (!is.na(txt) && nzchar(trimws(txt))) txt else ""
+          }
+          if (nzchar(tooltip_text)) {
+            labelinput <- tagList(
+              labelinput,
+              tags$sup(title = tooltip_text,
+                       style = "cursor: help; color: #337ab7; margin-left: 3px;",
+                       icon("circle-question", style = "font-size: 1em;"))
+            )
+          }
   
           control <- switch(
             control_type,
@@ -418,15 +437,29 @@ moduleTabInterface_Server <- function(id, language, data = dataDENTRO, interface
           names(choices)<-labchoices
           #print(choices)
           labelinput<-goodtranslations$labelcriteria[i]
-          
+          tooltip_text <- {
+            txt <- if ("labeltooltip" %in% names(goodtranslations)) goodtranslations$labeltooltip[i] else ""
+            if (!is.na(txt) && nzchar(trimws(txt))) txt else ""
+          }
+          # updateXxx label must be a plain string; convert tagList to HTML character
+          labelinput_html <- if (nzchar(tooltip_text)) {
+            as.character(tagList(
+              labelinput,
+              tags$sup(title = tooltip_text,
+                       style = "cursor: help; color: #337ab7; margin-left: 3px;",
+                       icon("circle-question", style = "font-size: 0.75em;"))
+            ))
+          } else {
+            labelinput
+          }
           
           switch(
             control_type,
-            checkboxInput=updateCheckboxInput(session, input_id, label = labelinput, value=current_value),
-            numericInput=updateNumericInput(session, input_id, label = labelinput, value=current_value),
-            selectInput=updateSelectInput(session, input_id, label = labelinput, choices=choices, selected  = current_value),
-            checkboxGroupInput=updateCheckboxGroupInput(session,input_id, label = labelinput, choices = choices, selected = current_value),
-            sliderInput=updateSliderInput(session, input_id, label = labelinput, min=min(as.numeric(choices)), max=max(as.numeric(choices)), value=as.numeric(current_value))
+            checkboxInput=updateCheckboxInput(session, input_id, label = labelinput_html, value=current_value),
+            numericInput=updateNumericInput(session, input_id, label = labelinput_html, value=current_value),
+            selectInput=updateSelectInput(session, input_id, label = labelinput_html, choices=choices, selected  = current_value),
+            checkboxGroupInput=updateCheckboxGroupInput(session,input_id, label = labelinput_html, choices = choices, selected = current_value),
+            sliderInput=updateSliderInput(session, input_id, label = labelinput_html, min=min(as.numeric(choices)), max=max(as.numeric(choices)), value=as.numeric(current_value))
             # Add more control types as needed
           )
         })

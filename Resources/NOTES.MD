@@ -100,3 +100,7 @@ shinyApp(
     )
   )
 )
+
+# 9.3.2026 - implementations
+  when user hovers over specific tree in plot - show short description of the tree and values it got
+  wehn hard criteria is selected show warning

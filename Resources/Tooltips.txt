@@ -1,0 +1,18 @@
+ criteria_cz                            	 tooltip_cz
+ Podrostové dřeviny                     	 Dřeviny vhodné jako podrostové v vícevrstvých agrolesních systémech
+ Dotace                                 	 Filtrovat dle způsobilosti k dotaci dle NV č. 140/2023 Sb. Dřeviny mimo vybranou kategorii jsou vyloučeny z výsledků.
+ Půdní nároky-úrodnost                  	 Charakteristika půdy na vašem stanovišti
+ klimatický region (BPEJ)               	 Klimatický region dle klasifikace BPEJ (Bonitovaná půdně ekologická jednotka) zadejte hodnotu 0–9. Pro více informací o klimatických regionech viz https://bpej.vumop.cz/.
+ Nadmořská výška                        	 Nadmořská výška vaše stanoviště
+ Okrasná funkce (estetická, historická) 	 Ponechá pouze dřeviny ceněné pro estetickou, krajinnou nebo historickou funkci
+ Produkce ovoce                         	 Ponechá pouze dřeviny produkující ovoce jedlé pro člověka
+ Produkce dřeva                         	 Ponechá pouze dřeviny vhodné pro produkci dřeva nebo palivového dříví
+ Krmná dřevina / Produkce krmiva        	 Ponechá pouze dřeviny, jejichž listy, výhonky nebo plody slouží jako krmivo pro hospodářská zvířata
+ Půdní nároky-vodní režim               	 Vodní režim půdy na vašem stanovišti
+ Termín kvetení                         	 Vyberte rozsah měsíců kvetení (posuvník pro filtrování dle doby kvetení)
+ Nároky na světlo                       	 Zvolte požadovanou náročnost dřevin na osvětlení dle podmínek stanoviště. 
+ Ranost rašení listů III-V              	 Zvolte požadovanou ranost rašení listů (důležité pro riziko pozdních mrazů)
+ Rychlost růstu na vhodných stanovištích	 Zvolte požadovanou rychlost růstu dřevin na vhodných stanovištích
+ Vzrůst, habitus (v ALS)                	 Zvolte požadovaný vzrůst dřeviny v agrolesním systému
+ VÝŠKA (max v m)                        	 Zvolte rozsah maximální výšky vzrostlé dřevin v metrech. Dřeviny mimo rozsah jsou vyloučeny z výsledků.
+ Kopicování                             	 Zvolte vhodnost pro kopicování – důležité pro systémy s krátkou obmýtní dobou
